@@ -271,7 +271,19 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+
+  config.omniauth :google_oauth2,
+    Rails.application.credentials.dig(:google, :client_id),
+    Rails.application.credentials.dig(:google, :client_secret),
+    {
+      scope: 'email,profile',
+      access_type: 'offline',
+      prompt: 'select_account',
+      image_aspect_ratio: 'square',
+      image_size: 50,
+      redirect_uri: 'https://fd0a-115-246-61-219.ngrok-free.app/users/auth/google_oauth2/callback',
+      skip_jwt: true
+    }
 
   env_creds = Rails.application.credentials[Rails.env.to_sym] || {}
   %i{ facebook twitter github }.each do |provider|
