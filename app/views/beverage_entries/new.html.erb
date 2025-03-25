@@ -1,0 +1,100 @@
+<div class="container mt-3 py-9">
+  <form class="needs-validation" 
+        data-controller="beverage-form" 
+        novalidate 
+        enctype="multipart/form-data" 
+        action="/beverage_entries" 
+        method="post">
+    <input type="hidden" name="authenticity_token" value="YOUR_AUTH_TOKEN">
+
+    <!-- Consumed At -->
+    <div class="mb-3">
+      <label for="beverage_entry_consumed_at" class="form-label">When did you consume the beverage?</label>
+      <input type="datetime-local" class="form-control" name="beverage_entry[consumed_at]" id="beverage_entry_consumed_at" required>
+      <div class="invalid-feedback">Please provide a valid date and time.</div>
+    </div>
+
+    <!-- Beverage Type -->
+    <div class="mb-3">
+      <label for="beverage_entry_beverage_type" class="form-label">What type of beverage was it?</label>
+      <select class="form-select" 
+              data-beverage-form-target="category"
+              data-action="change->beverage-form#updateSubcategories"
+              name="beverage_entry[beverage_type]" 
+              id="beverage_entry_beverage_type" 
+              required>
+        <% BeverageEntry::CATEGORIES.keys.each do |type| %>
+          <option value="<%= type %>" <%= 'selected' if @beverage_entry&.beverage_type == type || (params[:action] == 'new' && type == BeverageEntry::CATEGORIES.keys.first) %>><%= type %></option>
+        <% end %>
+      </select>
+      <div class="invalid-feedback">Please select a beverage type.</div>
+    </div>
+
+    <!-- Add Subcategory field -->
+    <div class="mb-3">
+      <label for="beverage_entry_subcategory" class="form-label">Subcategory</label>
+      <select class="form-select" 
+              data-beverage-form-target="subcategory"
+              name="beverage_entry[subcategory]" 
+              id="beverage_entry_subcategory" 
+              required>
+        <option value="">Select Category First</option>
+      </select>
+      <div class="invalid-feedback">Please select a subcategory.</div>
+    </div>
+
+    <!-- Quantity and Unit -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="beverage_entry_quantity" class="form-label">How much did you drink?</label>
+        <input type="number" class="form-control" name="beverage_entry[quantity]" id="beverage_entry_quantity" required>
+        <div class="invalid-feedback">Please enter a quantity.</div>
+      </div>
+      <div class="col-md-6">
+        <label for="beverage_entry_quantity_unit" class="form-label">Unit</label>
+        <select class="form-select" name="beverage_entry[quantity_unit]" id="beverage_entry_quantity_unit" required>
+          <option value="">Select Unit</option>
+          <option value="ml">ml</option>
+          <option value="oz">oz</option>
+        </select>
+        <div class="invalid-feedback">Please select a unit.</div>
+      </div>
+    </div>
+
+    <!-- Temperature -->
+    <div class="mb-3">
+      <label for="beverage_entry_temperature" class="form-label">What was the temperature?</label>
+      <input type="range" 
+             class="form-range" 
+             min="0" 
+             max="6" 
+             name="beverage_entry[temperature]" 
+             id="beverage_entry_temperature"
+             data-action="input->beverage-form#updateTemperatureLabel"
+             required>
+      <div data-beverage-form-target="temperatureLabel" class="text-center">🌡️ Room Temperature</div>
+      <div class="invalid-feedback">Please select a temperature.</div>
+    </div>
+
+    <!-- Notes -->
+    <div class="mb-3">
+      <label for="beverage_entry_notes" class="form-label">Any additional notes?</label>
+      <textarea class="form-control" rows="4" name="beverage_entry[notes]" id="beverage_entry_notes"></textarea>
+    </div>
+
+    <!-- File Upload -->
+    <div class="mb-3">
+      <label for="beverage_entry_photo" class="form-label">Upload a photo (optional)</label>
+      <input type="file" class="form-control" id="beverage_entry_photo" name="beverage_entry[photo]" accept="image/png, image/jpeg, image/heif">
+      <div class="mt-2" id="preview-container" style="display:none;">
+        <img id="image-preview" class="img-thumbnail" width="200">
+        <!-- <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeImage()">Remove File</button> -->
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-grid mt-3">
+      <button type="submit" class="btn btn-primary">Create Beverage Entry</button>
+    </div>
+  </form>
+</div>
