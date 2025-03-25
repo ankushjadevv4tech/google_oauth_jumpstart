@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["category", "subcategory", "temperatureLabel"]
+  static targets = ["category", "subcategory"]
 
   connect() {
     // File Preview
@@ -17,60 +17,30 @@ export default class extends Controller {
       }
     });
 
-    // function removeImage() {
-    //   document.getElementById("beverage_entry_photo").value = "";
-    //   document.getElementById("preview-container").style.display = "none";
-    // }
-
     // Add more visible debugging
     console.log("Beverage form controller connected")
     document.body.classList.add('beverage-form-connected')
     
     this.updateSubcategories()
-    this.updateTemperatureLabel()
-
-    // Bootstrap Form Validation
-    (function () {
-      'use strict';
-      var forms = document.querySelectorAll('.needs-validation');
-      Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
-    })();
   }
 
   updateSubcategories() {
     const subcategorySelect = this.element.querySelector('select[name="beverage_entry[subcategory]"]');
     const category = this.categoryTarget.value
     const subcategories = this.getSubcategoriesFor(category)
+    const selectedSubcategory = subcategorySelect.dataset.selectedSubcategory
+
     // Update subcategory options
     subcategorySelect.innerHTML = ""; // Clear existing options
     subcategories.forEach(subcategory => {
       const option = document.createElement("option");
       option.value = subcategory;
       option.textContent = subcategory;
+      if (subcategory === selectedSubcategory) {
+        option.selected = true;
+      }
       subcategorySelect.appendChild(option);
     });
-  }
-
-  updateTemperatureLabel() {
-    const value = this.element.querySelector('input[type="range"]').value
-    const labels = {
-      0: "❄️ Ice Cold",
-      1: "🧊 Chilled",
-      2: "🌡️ Cool",
-      3: "🌡️ Room Temperature",
-      4: "🔥 Warm",
-      5: "🌡️ Hot",
-      6: "💧 Boiling",
-    }
-    this.temperatureLabelTarget.textContent = labels[value]
   }
 
   getSubcategoriesFor(category) {

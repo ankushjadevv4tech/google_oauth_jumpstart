@@ -1,0 +1,113 @@
+<div class="card mb-3 shadow mx-auto" style="max-width: 100%; background-color: lightgray;">
+  <div class="mt-3 mx-auto text-center">
+    <strong><%= title %></strong>
+  </div>
+  <div class="container-fluid mt-3 py-3">
+    <%= content_tag :form, local: true,
+        class: "needs-validation",
+        novalidate: true,
+        enctype: "multipart/form-data",
+        data: { controller: "beverage-form" },
+        action: action_url,
+        method: method do %>
+      
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+      <!-- Consumed At -->
+      <div class="mb-3">
+        <label for="beverage_entry_consumed_at" class="form-label">When did you consume the beverage?</label>
+        <%= tag.input type: "datetime-local", 
+            class: "form-control",
+            name: "beverage_entry[consumed_at]",
+            id: "beverage_entry_consumed_at",
+            value: beverage_entry.consumed_at&.strftime('%Y-%m-%dT%H:%M'),
+            required: true %>
+        <div class="invalid-feedback">Please provide a valid date and time.</div>
+      </div>
+
+      <!-- Category -->
+      <div class="mb-3">
+        <label for="beverage_entry_category" class="form-label">What type of beverage was it?</label>
+        <select class="form-select" 
+                data-beverage-form-target="category"
+                data-action="change->beverage-form#updateSubcategories"
+                name="beverage_entry[category]" 
+                id="beverage_entry_category" 
+                required>
+          <% BeverageEntry::CATEGORIES.keys.each do |type| %>
+            <option value="<%= type %>" <%= 'selected' if beverage_entry.category == type %>><%= type %></option>
+          <% end %>
+        </select>
+        <div class="invalid-feedback">Please select a beverage category.</div>
+      </div>
+
+      <!-- Subcategory -->
+      <div class="mb-3">
+        <label for="beverage_entry_subcategory" class="form-label">Subcategory</label>
+        <select class="form-select" 
+                data-beverage-form-target="subcategory"
+                data-selected-subcategory="<%= beverage_entry.subcategory %>"
+                name="beverage_entry[subcategory]" 
+                id="beverage_entry_subcategory" 
+                required>
+        </select>
+        <div class="invalid-feedback">Please select a subcategory.</div>
+      </div>
+
+      <!-- Quantity and Unit -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="beverage_entry_quantity" class="form-label">How much did you drink?</label>
+          <%= tag.input type: "number",
+              class: "form-control",
+              name: "beverage_entry[quantity]",
+              id: "beverage_entry_quantity",
+              value: beverage_entry.quantity,
+              required: true %>
+          <div class="invalid-feedback">Please enter a quantity.</div>
+        </div>
+        <div class="col-md-6 mt-3">
+          <label for="beverage_entry_quantity_unit" class="form-label">Unit</label>
+          <%= select_tag "beverage_entry[quantity_unit]",
+              options_for_select([["ml", "ml"], ["ltr", "ltr"]], beverage_entry.quantity_unit),
+              class: "form-select",
+              required: true %>
+          <div class="invalid-feedback">Please select a unit.</div>
+        </div>
+      </div>
+
+      <!-- Temperature -->
+      <div class="mb-3">
+        <label for="beverage_entry_temperature" class="form-label">What was the temperature?</label>
+        <%= select_tag "beverage_entry[temperature]",
+            options_for_select(BeverageEntry.temperatures.keys.map { |temp| [temp.humanize, temp] }, beverage_entry.temperature),
+            class: "form-select",
+            data: { "beverage-form-target": "temperatureDropdown" },
+            required: true %>
+        <div class="invalid-feedback">Please select a temperature.</div>
+      </div>
+
+      <!-- Notes -->
+      <div class="mb-3">
+        <label for="beverage_entry_notes" class="form-label">Any additional notes?</label>
+        <%= text_area_tag "beverage_entry[notes]", beverage_entry.notes, class: "form-control", rows: 4 %>
+      </div>
+
+      <!-- File Upload -->
+      <div class="mb-3">
+        <label for="beverage_entry_photo" class="form-label">Upload a photo (optional)</label>
+        <%= file_field_tag "beverage_entry[photo]", class: "form-control", accept: "image/png, image/jpeg, image/heif" %>
+        <% if beverage_entry.photo.attached? %>
+          <div class="mt-2">
+            <img src="<%= url_for(beverage_entry.photo) %>" class="img-thumbnail" width="200">
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-grid mb-3 col-6 mx-auto">
+        <%= submit_tag submit_text, class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

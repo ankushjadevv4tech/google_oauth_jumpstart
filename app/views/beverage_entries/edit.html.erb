@@ -1,0 +1,6 @@
+<%= render 'form',
+    title: 'Edit Hydration Entry',
+    beverage_entry: @beverage_entry,
+    action_url: beverage_entry_path(@beverage_entry),
+    method: :patch,
+    submit_text: 'Update Beverage Entry' %>
