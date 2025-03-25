@@ -1,0 +1,1 @@
+<%= turbo_stream.replace "new_beverage_form", partial: "beverage_entries/form", locals: { beverage_entry: @beverage_entry, title: 'Hydration Tracker Form', action_url: beverage_entries_path,method: :post,submit_text: 'Create Beverage Entry'  } %>

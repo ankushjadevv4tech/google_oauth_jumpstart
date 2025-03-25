@@ -3,8 +3,6 @@
     <div class="d-flex align-items-center">
       <% if beverage_entry.photo.attached? %>
         <%= image_tag beverage_entry.photo, class: "rounded me-2 border border-2 border-dark", height: 100, width: 100, alt: "Beverage Photo" %>
-      <% else %>
-        <%= image_tag "default_beverage.png", class: "rounded me-2 border border-2 border-dark", height: 100, width: 100, alt: "Default Beverage Photo" %>
       <% end %>
 
       <div>
@@ -35,11 +33,11 @@
           <% temperature_emojis = {
             'very_cold' => '❄️',
             'cold' => '🧊',
-            'cool' => '😎',
+            'cool' => '🥶',
             'room_temperature' => '🌡️',
-            'warm' => '☕️',
-            'hot' => '♨️',
-            'very_hot' => '🔥'
+            'warm' => '🔥',
+            'hot' => '☕',
+            'very_hot' => '♨️'
           } %>
           <span><%= temperature_emojis[beverage_entry.temperature] %> <%= beverage_entry.temperature.titleize %></span>
         </div>

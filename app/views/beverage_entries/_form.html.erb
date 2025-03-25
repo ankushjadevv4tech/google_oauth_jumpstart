@@ -56,7 +56,8 @@
 
       <!-- Quantity and Unit -->
       <div class="row mb-3">
-        <div class="col-md-6">
+
+        <div class="col-12 col-md-6 mb-2 mb-md-0">
           <label for="beverage_entry_quantity" class="form-label">How much did you drink?</label>
           <%= tag.input type: "number",
               class: "form-control",
@@ -66,17 +67,31 @@
               required: true %>
           <div class="invalid-feedback">Please enter a quantity.</div>
         </div>
-        <div class="col-md-6 mt-3">
-          <label for="beverage_entry_quantity_unit" class="form-label">Unit</label>
-          <%= select_tag "beverage_entry[quantity_unit]",
-              options_for_select([["ml", "ml"], ["ltr", "ltr"]], beverage_entry.quantity_unit),
-              class: "form-select",
-              required: true %>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">Unit</label>
+          <div class="row g-2">
+            <% unit_options = [
+              ["ml", "📏 ml"],
+              ["ltr", "🛢️ ltr"],
+              ["oz", "🥤 oz"],
+              ["cup", "☕ Cup"]
+            ] %>
+
+            <% unit_options.each do |value, label| %>
+              <div class="col-6 col-md-3">
+                <input type="radio" class="btn-check" name="beverage_entry[quantity_unit]" id="unit_<%= value %>" value="<%= value %>" <%= "checked" if beverage_entry.quantity_unit == value %>>
+                <label class="btn btn-outline-primary w-100 unit-btn" for="unit_<%= value %>"><%= label %></label>
+              </div>
+            <% end %>
+          </div>
           <div class="invalid-feedback">Please select a unit.</div>
         </div>
+
       </div>
 
-      <!-- Temperature -->
+      <!-- 
+      Temperature 
       <div class="mb-3">
         <label for="beverage_entry_temperature" class="form-label">What was the temperature?</label>
         <%= select_tag "beverage_entry[temperature]",
@@ -86,6 +101,32 @@
             required: true %>
         <div class="invalid-feedback">Please select a temperature.</div>
       </div>
+      -->
+
+      <!-- Temperature -->
+      <div class="mb-3">
+        <label class="form-label">What was the temperature?</label>
+        <div class="row g-2">
+          <% temperature_options = [
+            ["very_cold", "❄️ Very Cold"],
+            ["cold", "🧊 Cold"],
+            ["cool", "🥶 Cool"],
+            ["room_temperature", "🌡️ Room"],
+            ["warm", "🔥 Warm"],
+            ["hot", "☕ Hot"],
+            ["very_hot", "♨️ Very Hot"]
+          ] %>
+
+          <% temperature_options.each do |value, label| %>
+            <div class="col-6 col-md-4">
+              <input type="radio" class="btn-check" name="beverage_entry[temperature]" id="<%= value %>" value="<%= value %>" <%= "checked" if beverage_entry.temperature == value %>>
+              <label class="btn btn-outline-primary w-100 temperature-btn" for="<%= value %>"><%= label %></label>
+            </div>
+          <% end %>
+        </div>
+        <div class="invalid-feedback">Please select a temperature.</div>
+      </div>
+
 
       <!-- Notes -->
       <div class="mb-3">
@@ -99,7 +140,7 @@
         <%= file_field_tag "beverage_entry[photo]", class: "form-control", accept: "image/png, image/jpeg, image/heif" %>
         <% if beverage_entry.photo.attached? %>
           <div class="mt-2">
-            <img src="<%= url_for(beverage_entry.photo) %>" class="img-thumbnail" width="200">
+            <%= image_tag beverage_entry.photo, class: "img-thumbnail", height: 100, width: 200, alt: "Beverage Photo" %>      
           </div>
         <% end %>
       </div>

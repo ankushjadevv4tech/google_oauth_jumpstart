@@ -18,14 +18,14 @@ class BeverageEntriesController < ApplicationController
 
   def create
     @beverage_entry = current_user.beverage_entries.build(beverage_entry_params)
-    
     if @beverage_entry.save
       respond_to do |format|
-        format.turbo_stream
-        redirect_to beverage_entry_path(@beverage_entry), notice: 'Entry was created.'
+        format.turbo_stream { redirect_to beverage_entry_path(@beverage_entry), notice: 'Entry was created.' }
       end
     else
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity, notice: @beverage_entry.errors }
+      end
     end
   end
 
