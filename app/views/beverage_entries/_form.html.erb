@@ -54,25 +54,6 @@
         <% end %>
       </div>
 
-      <!-- Symptoms Tracking -->
-      <div class="mb-3">
-        <label class="form-label">Did you experience any symptoms?</label>
-        <%= f.radio_button :symptoms_occurred, true, class: "form-check-input", data: { action: "change->beverage-form#toggleSymptoms" } %>
-        <%= label_tag :symptoms_occurred_true, "Yes", class: "form-check-label" %>
-        <%= f.radio_button :symptoms_occurred, false, class: "form-check-input" %>
-        <%= label_tag :symptoms_occurred_false, "No", class: "form-check-label" %>
-      </div>
-
-      <div id="symptom-details" class="d-none">
-        <label class="form-label">Select Symptoms</label>
-        <% ["Bloating", "Nausea", "Heartburn", "Diarrhea", "Constipation"].each do |symptom| %>
-          <div class="form-check">
-            <%= f.check_box :symptoms, { multiple: true, class: "form-check-input" }, symptom, nil %>
-            <%= label_tag "beverage_entry_symptoms_#{symptom}", symptom, class: "form-check-label" %>
-          </div>
-        <% end %>
-      </div>
-
       <!-- Photo Upload -->
       <div class="mb-3">
         <label class="form-label">Upload a Photo (Optional)</label>

@@ -43,6 +43,21 @@
         </div>
       </div>
 
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <strong>Additions:</strong>
+          <% if beverage_entry.additions.present? %>
+            <ul>
+              <% beverage_entry.additions.each do |addition| %>
+                <li><%= addition %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <span>None</span>
+          <% end %>
+        </div>
+      </div>
+
       <% if beverage_entry.notes.present? %>
         <div class="mt-3">
           <strong>Notes:</strong>
