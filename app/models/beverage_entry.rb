@@ -9,7 +9,7 @@ class BeverageEntry < ApplicationRecord
   
   enum temperature: {
     very_cold: 0,
-    cold: 1,
+    chilled: 1,
     cool: 2,
     room_temperature: 3,
     warm: 4,

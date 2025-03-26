@@ -281,7 +281,7 @@ Devise.setup do |config|
       prompt: 'select_account',
       image_aspect_ratio: 'square',
       image_size: 50,
-      redirect_uri: 'https://0fee-115-246-61-219.ngrok-free.app/users/auth/google_oauth2/callback',
+      redirect_uri: 'https://da70-115-246-61-219.ngrok-free.app/users/auth/google_oauth2/callback',
       skip_jwt: true
     }
 

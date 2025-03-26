@@ -31,15 +31,15 @@
         <div class="col-md-6">
           <strong>Temperature:</strong>
           <% temperature_emojis = {
-            'very_cold' => '❄️',
-            'cold' => '🧊',
-            'cool' => '🥶',
-            'room_temperature' => '🌡️',
-            'warm' => '🔥',
-            'hot' => '☕',
-            'very_hot' => '♨️'
+            'very_cold' => '❄️ Ice Cold (0°C / 32°F)',
+            'chilled' => '🧊 Chilled (4°C / 40°F)',
+            'cool' => '🥶 Cool (10°C / 50°F)',
+            'room_temperature' => '🌡️ Room Temperature (20°C / 68°F)',
+            'warm' => '🔥 Warm (50°C / 122°F)',
+            'hot' => '☕ Hot (70°C / 158°F)',
+            'very_hot' => '♨️ Boiling (100°C / 212°F)'
           } %>
-          <span><%= temperature_emojis[beverage_entry.temperature] %> <%= beverage_entry.temperature.titleize %></span>
+          <span><%= temperature_emojis[beverage_entry.temperature] %></span>
         </div>
       </div>
 

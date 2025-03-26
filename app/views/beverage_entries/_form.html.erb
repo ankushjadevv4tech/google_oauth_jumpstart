@@ -3,152 +3,87 @@
     <strong><%= title %></strong>
   </div>
   <div class="container-fluid mt-3 py-3">
-    <%= content_tag :form, local: true,
-        class: "needs-validation",
-        novalidate: true,
-        enctype: "multipart/form-data",
-        data: { controller: "beverage-form" },
-        action: action_url,
-        method: method do %>
+    <%= form_with model: beverage_entry, local: true, data: { controller: "beverage-form" } do |f| %>
       
-      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-
       <!-- Consumed At -->
       <div class="mb-3">
-        <label for="beverage_entry_consumed_at" class="form-label">When did you consume the beverage?</label>
-        <%= tag.input type: "datetime-local", 
-            class: "form-control",
-            name: "beverage_entry[consumed_at]",
-            id: "beverage_entry_consumed_at",
-            value: beverage_entry.consumed_at&.strftime('%Y-%m-%dT%H:%M'),
-            required: true %>
-        <div class="invalid-feedback">Please provide a valid date and time.</div>
+        <label class="form-label">Date & Time of Consumption</label>
+        <%= f.datetime_local_field :consumed_at, class: "form-control", required: true %>
       </div>
 
       <!-- Category -->
       <div class="mb-3">
-        <label for="beverage_entry_category" class="form-label">What type of beverage was it?</label>
-        <select class="form-select" 
-                data-beverage-form-target="category"
-                data-action="change->beverage-form#updateSubcategories"
-                name="beverage_entry[category]" 
-                id="beverage_entry_category" 
-                required>
-          <% BeverageEntry::CATEGORIES.keys.each do |type| %>
-            <option value="<%= type %>" <%= 'selected' if beverage_entry.category == type %>><%= type %></option>
-          <% end %>
-        </select>
-        <div class="invalid-feedback">Please select a beverage category.</div>
+        <label class="form-label">Beverage Category</label>
+        <%= f.select :category, BeverageEntry::CATEGORIES.keys, { include_blank: true }, class: "form-select", data: { action: "change->beverage-form#updateSubcategories" }, required: true %>
       </div>
 
       <!-- Subcategory -->
       <div class="mb-3">
-        <label for="beverage_entry_subcategory" class="form-label">Subcategory</label>
-        <select class="form-select" 
-                data-beverage-form-target="subcategory"
-                data-selected-subcategory="<%= beverage_entry.subcategory %>"
-                name="beverage_entry[subcategory]" 
-                id="beverage_entry_subcategory" 
-                required>
-        </select>
-        <div class="invalid-feedback">Please select a subcategory.</div>
+        <label class="form-label">Subcategory</label>
+        <%= f.select :subcategory, [], { include_blank: true }, class: "form-select", data: { target: "beverage-form.subcategory", selected_subcategory: f.object&.subcategory }, required: true %>
       </div>
 
-      <!-- Quantity and Unit -->
-      <div class="row mb-3">
-
-        <div class="col-12 col-md-6 mb-2 mb-md-0">
-          <label for="beverage_entry_quantity" class="form-label">How much did you drink?</label>
-          <%= tag.input type: "number",
-              class: "form-control",
-              name: "beverage_entry[quantity]",
-              id: "beverage_entry_quantity",
-              value: beverage_entry.quantity,
-              required: true %>
-          <div class="invalid-feedback">Please enter a quantity.</div>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <label class="form-label">Unit</label>
-          <div class="row g-2">
-            <% unit_options = [
-              ["ml", "📏 ml"],
-              ["ltr", "🛢️ ltr"],
-              ["oz", "🥤 oz"],
-              ["cup", "☕ Cup"]
-            ] %>
-
-            <% unit_options.each do |value, label| %>
-              <div class="col-6 col-md-3">
-                <input type="radio" class="btn-check" name="beverage_entry[quantity_unit]" id="unit_<%= value %>" value="<%= value %>" <%= "checked" if beverage_entry.quantity_unit == value %>>
-                <label class="btn btn-outline-primary w-100 unit-btn" for="unit_<%= value %>"><%= label %></label>
-              </div>
-            <% end %>
-          </div>
-          <div class="invalid-feedback">Please select a unit.</div>
-        </div>
-
-      </div>
-
-      <!-- 
-      Temperature 
+      <!-- Quantity -->
       <div class="mb-3">
-        <label for="beverage_entry_temperature" class="form-label">What was the temperature?</label>
-        <%= select_tag "beverage_entry[temperature]",
-            options_for_select(BeverageEntry.temperatures.keys.map { |temp| [temp.humanize, temp] }, beverage_entry.temperature),
-            class: "form-select",
-            data: { "beverage-form-target": "temperatureDropdown" },
-            required: true %>
-        <div class="invalid-feedback">Please select a temperature.</div>
+        <label class="form-label">Quantity</label>
+        <div class="d-flex">
+          <%= f.number_field :quantity, class: "form-control", required: true, min: 0 %>
+          <%= f.select :quantity_unit, [["Cups", "cups"], ["Ounces", "oz"], ["Milliliters", "ml"], ["Liters", "l"]], { selected: beverage_entry.quantity_unit }, class: "form-select ms-2", required: true %>
+        </div>
       </div>
-      -->
 
       <!-- Temperature -->
       <div class="mb-3">
-        <label class="form-label">What was the temperature?</label>
-        <div class="row g-2">
-          <% temperature_options = [
-            ["very_cold", "❄️ Very Cold"],
-            ["cold", "🧊 Cold"],
-            ["cool", "🥶 Cool"],
-            ["room_temperature", "🌡️ Room"],
-            ["warm", "🔥 Warm"],
-            ["hot", "☕ Hot"],
-            ["very_hot", "♨️ Very Hot"]
-          ] %>
-
-          <% temperature_options.each do |value, label| %>
-            <div class="col-6 col-md-4">
-              <input type="radio" class="btn-check" name="beverage_entry[temperature]" id="<%= value %>" value="<%= value %>" <%= "checked" if beverage_entry.temperature == value %>>
-              <label class="btn btn-outline-primary w-100 temperature-btn" for="<%= value %>"><%= label %></label>
-            </div>
-          <% end %>
+        <label class="form-label">Temperature</label>
+        <%= f.range_field :temperature, in: 0..6, class: "form-range", data: { action: "input->beverage-form#updateTemperatureLabel", beverage_form_target: "temperatureSlider" }, value: BeverageEntry.temperatures[beverage_entry.temperature] %>
+        <%= f.hidden_field :temperature, data: { beverage_form_target: "temperatureValue" }, value: beverage_entry.temperature %>
+        <div data-beverage-form-target="temperatureLabel" class="text-center">
+          <%= beverage_entry.temperature.present? ? "🌡️ #{BeverageEntry.temperatures.key(beverage_entry.temperature)}" : "🌡️ Room Temperature" %>
         </div>
         <div class="invalid-feedback">Please select a temperature.</div>
       </div>
 
-
-      <!-- Notes -->
+      <!-- Additives -->
       <div class="mb-3">
-        <label for="beverage_entry_notes" class="form-label">Any additional notes?</label>
-        <%= text_area_tag "beverage_entry[notes]", beverage_entry.notes, class: "form-control", rows: 4 %>
-      </div>
-
-      <!-- File Upload -->
-      <div class="mb-3">
-        <label for="beverage_entry_photo" class="form-label">Upload a photo (optional)</label>
-        <%= file_field_tag "beverage_entry[photo]", class: "form-control", accept: "image/png, image/jpeg, image/heif" %>
-        <% if beverage_entry.photo.attached? %>
-          <div class="mt-2">
-            <%= image_tag beverage_entry.photo, class: "img-thumbnail", height: 100, width: 200, alt: "Beverage Photo" %>      
+        <label class="form-label">Additions</label>
+        <% ["Sugar", "Milk", "Creamer", "Lemon", "Lime", "Honey", "Artificial Sweeteners", "Protein Powder", "Electrolyte Powder"].each do |additive| %>
+          <div class="form-check">
+        <%= f.check_box :additions, { multiple: true, class: "form-check-input" }, additive, nil %>
+        <%= label_tag "beverage_entry_additions_#{additive}", additive, class: "form-check-label" %>
           </div>
         <% end %>
       </div>
 
-      <!-- Submit Button -->
-      <div class="d-grid mb-3 col-6 mx-auto">
-        <%= submit_tag submit_text, class: "btn btn-primary" %>
+      <!-- Symptoms Tracking -->
+      <div class="mb-3">
+        <label class="form-label">Did you experience any symptoms?</label>
+        <%= f.radio_button :symptoms_occurred, true, class: "form-check-input", data: { action: "change->beverage-form#toggleSymptoms" } %>
+        <%= label_tag :symptoms_occurred_true, "Yes", class: "form-check-label" %>
+        <%= f.radio_button :symptoms_occurred, false, class: "form-check-input" %>
+        <%= label_tag :symptoms_occurred_false, "No", class: "form-check-label" %>
       </div>
+
+      <div id="symptom-details" class="d-none">
+        <label class="form-label">Select Symptoms</label>
+        <% ["Bloating", "Nausea", "Heartburn", "Diarrhea", "Constipation"].each do |symptom| %>
+          <div class="form-check">
+            <%= f.check_box :symptoms, { multiple: true, class: "form-check-input" }, symptom, nil %>
+            <%= label_tag "beverage_entry_symptoms_#{symptom}", symptom, class: "form-check-label" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Photo Upload -->
+      <div class="mb-3">
+        <label class="form-label">Upload a Photo (Optional)</label>
+        <%= f.file_field :photo, class: "form-control" %>
+      </div>
+
+      <!-- Submit -->
+      <div class="mt-3 text-center">
+        <%= f.submit submit_text, class: "btn btn-primary" %>
+      </div>
+
     <% end %>
   </div>
 </div>
