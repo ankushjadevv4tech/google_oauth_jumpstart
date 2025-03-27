@@ -14,13 +14,17 @@
       <!-- Category -->
       <div class="mb-3">
         <label class="form-label">Beverage Category</label>
-        <%= f.select :category, BeverageEntry::CATEGORIES.keys, { include_blank: true }, class: "form-select", data: { action: "change->beverage-form#updateSubcategories" }, required: true %>
+        <%= f.select :category, BeverageEntry::CATEGORIES.keys.map { |type| [type, type] }, 
+          { include_blank: true, selected: @beverage_entry&.category || (params[:action] == 'new' ? BeverageEntry::CATEGORIES.keys.first : nil) }, 
+          class: "form-select", 
+          data: { action: "change->beverage-form#updateSubcategories" }, 
+          required: true %>
       </div>
 
       <!-- Subcategory -->
       <div class="mb-3">
         <label class="form-label">Subcategory</label>
-        <%= f.select :subcategory, [], { include_blank: true }, class: "form-select", data: { target: "beverage-form.subcategory", selected_subcategory: f.object&.subcategory }, required: true %>
+        <%= f.select :subcategory, [], { include_blank: true }, class: "form-select", data: { beverage_form_target: "subcategory", selected_subcategory: f.object&.subcategory }, required: true %>
       </div>
 
       <!-- Quantity -->
@@ -54,6 +58,7 @@
         <% end %>
       </div>
 
+      
       <!-- Photo Upload -->
       <div class="mb-3">
         <label class="form-label">Upload a Photo (Optional)</label>
