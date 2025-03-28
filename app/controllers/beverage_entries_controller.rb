@@ -8,12 +8,14 @@ class BeverageEntriesController < ApplicationController
 
   def new
     @beverage_entry = current_user.beverage_entries.build
+    @beverage_entry.build_symptom
   end
 
   def show
   end
 
   def edit
+    @beverage_entry.build_symptom if @beverage_entry.symptom.nil?
   end
 
   def create
@@ -39,7 +41,9 @@ class BeverageEntriesController < ApplicationController
 
   def destroy
     @beverage_entry.destroy
-    redirect_to beverage_entries_url, notice: 'Beverage entry was successfully destroyed.'
+    respond_to do |format|
+      format.turbo_stream { redirect_to beverage_entries_url, notice: 'Beverage entry was successfully destroyed.' }
+    end
   end
 
   private
@@ -58,7 +62,16 @@ class BeverageEntriesController < ApplicationController
       :temperature,
       :notes,
       :photo,
-      additions: []
+      :symptoms_occurred,
+      additions: [],
+      symptoms_attributes: [
+        :id, 
+        :severity, 
+        :onset_time, 
+        :other_symptom, 
+        :_destroy, 
+        { name: [] }
+      ]
     )
   end
 end

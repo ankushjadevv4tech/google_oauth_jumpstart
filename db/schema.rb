@@ -60,6 +60,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_24_142147) do
     t.integer "temperature", null: false
     t.text "notes"
     t.string "additions", default: [], array: true
+    t.boolean "symptoms_occurred", default: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -117,7 +118,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_24_142147) do
 
   create_table "symptoms", force: :cascade do |t|
     t.bigint "beverage_entry_id", null: false
-    t.string "name", null: false
+    t.string "name", default: [], array: true
+    t.string "other_symptom"
     t.integer "severity", null: false
     t.integer "onset_time", null: false
     t.datetime "created_at", null: false

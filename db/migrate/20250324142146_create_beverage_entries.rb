@@ -9,6 +9,7 @@ class CreateBeverageEntries < ActiveRecord::Migration[7.0]
       t.integer :temperature, null: false
       t.text :notes
       t.string :additions, array: true, default: []
+      t.boolean :symptoms_occurred, default: false
       t.references :user, null: false, foreign_key: true
 
       t.timestamps

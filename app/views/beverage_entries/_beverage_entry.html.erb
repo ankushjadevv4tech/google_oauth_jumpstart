@@ -1,8 +1,8 @@
-<div class="container mt-3">
+<div id="<%= dom_id(beverage_entry) %>" class="container mt-3">
   <div class="card p-4 shadow">
     <div class="d-flex align-items-center">
       <% if beverage_entry.photo.attached? %>
-        <%= image_tag beverage_entry.photo, class: "rounded me-2 border border-2 border-dark", height: 100, width: 100, alt: "Beverage Photo" %>
+        <%= image_tag beverage_entry.photo, class: "rounded me-2 border border-2 border-light", height: 100, width: 100, alt: "Beverage Photo" %>
       <% end %>
 
       <div>
@@ -67,10 +67,9 @@
     </div>
 
     <!-- Actions -->
-    <div class="mt-4">
-      <%= link_to 'Back', beverage_entries_path, class: "btn btn-outline-secondary me-2" %>
+    <div class="mt-4">    
       <%= link_to 'Edit', edit_beverage_entry_path(beverage_entry), class: "btn btn-outline-primary me-2" %>
-      <%= button_to 'Delete', beverage_entry_path(beverage_entry), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger", form: { style: 'display: inline-block;' } %>
+      <%= button_to 'Delete', beverage_entry_path(beverage_entry), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: "btn btn-outline-danger", form: { style: 'display: inline-block;' } %>
     </div>
   </div>
 </div>

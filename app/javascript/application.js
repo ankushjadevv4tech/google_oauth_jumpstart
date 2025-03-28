@@ -12,6 +12,7 @@ require("@rails/ujs").start()
 
 import './channels/**/*_channel.js'
 import "./controllers"
+import "./controllers/sessions.js"
 
 import * as bootstrap from "bootstrap"
 

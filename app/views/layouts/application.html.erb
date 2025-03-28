@@ -6,10 +6,12 @@
 
   <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0"> 
-      <%= render 'shared/navbar' %>
+      <div class="container mx-auto">
+        <%= render 'shared/navbar' %>
+      </div>
       <%= render 'shared/notices' %>
 
-      <div class="container mt-4 mx-auto">
+      <div class="container mt-8 mx-auto">
         <%= yield %>
       </div>
     </main>

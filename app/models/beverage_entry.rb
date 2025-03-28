@@ -1,11 +1,11 @@
 class BeverageEntry < ApplicationRecord
   belongs_to :user
-  has_many :symptoms, dependent: :destroy
+  has_one :symptom, dependent: :destroy
   has_one_attached :photo
   
   validates :consumed_at, :category, :quantity, :quantity_unit, :temperature, presence: true
   
-  accepts_nested_attributes_for :symptoms, allow_destroy: true
+  accepts_nested_attributes_for :symptom, allow_destroy: true
   
   enum temperature: {
     very_cold: 0,
@@ -16,6 +16,12 @@ class BeverageEntry < ApplicationRecord
     hot: 5,
     very_hot: 6
   }
+
+  after_create_commit { broadcast_prepend_to "beverage_entries" }
+  after_destroy_commit { broadcast_remove_to "beverage_entries" }
+  after_update_commit { broadcast_replace_to "beverage_entries" }
+
+
 
   CATEGORIES = {
     "Water-Based Beverages" => [
@@ -92,4 +98,10 @@ class BeverageEntry < ApplicationRecord
       "Other"
     ]
   }
+
+  private
+
+  def broadcast_remove(**rendering)
+    broadcast_remove_to self, **rendering
+  end
 end

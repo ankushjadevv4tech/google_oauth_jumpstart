@@ -85,3 +85,4 @@ gem "responders", github: "heartcombo/responders", branch: "main"
 gem "omniauth-rails_csrf_protection"
 gem 'rack-cors'
 gem "omniauth-google-oauth2"
+gem "tailwindcss-rails", "~> 4.2"

@@ -1,3 +1,4 @@
-<div id="beverage_entries">
-  <%= render partial: 'beverage_entry', locals: { beverage_entry: @beverage_entry } %>
+<div class="container mt-3">
+<%= link_to 'Back', beverage_entries_path, class: 'btn btn-outline-secondary' %>
 </div>
+<%= render partial: 'beverage_entry', locals: { beverage_entry: @beverage_entry } %>

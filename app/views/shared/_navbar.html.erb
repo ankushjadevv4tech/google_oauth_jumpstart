@@ -4,9 +4,7 @@
     <%= link_to stop_impersonating_madmin_impersonates_path, method: :post do %><%= icon("fas", "times") %> Logout <% end %>
   </div>
 <% end %>
-
-<nav class="navbar navbar-expand-md navbar-light bg-light">
-  <div class="container mx-auto">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-body p-2 mb-3" data-bs-theme="dark">
     <%= link_to Rails.configuration.application_name, root_path, class: "navbar-brand" %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,5 +46,4 @@
         <% end %>
       </ul>
     </div>
-  </div>
-</nav>
+  </nav>

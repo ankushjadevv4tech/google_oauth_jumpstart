@@ -1,0 +1,11 @@
+<!-- filepath: /home/developer/google_oauth_jumpstart/app/views/beverage_entries/_symptom_fields.html.erb -->
+<div class="mb-2 border p-3">
+  <%= form.label :name, "Name" %>
+  <%= form.select :name, options_for_select(Symptom::ALLOWED_NAMES.map { |name| [name, name] }, selected: form.object.name), {}, class: "form-select mt-2", multiple: true %>
+  <%= form.label :severity, "Severity" %>
+  <%= form.select :severity, Symptom.severities.keys.map { |k| [k.humanize, k] }, {}, class: "form-select mt-2" %>
+  <%= form.label :onset_time, "Onset Time" %>
+  <%= form.select :onset_time, Symptom.onset_times.keys.map { |k| [k.humanize, k] }, {}, class: "form-select mt-2" %>
+  <%= link_to "Remove", "#", class: "btn btn-danger mt-2", data: { action: "nested-form#remove" } %>
+  <%= form.hidden_field :_destroy %>
+</div>
