@@ -1,21 +1,15 @@
 <!DOCTYPE html>
-<html class="h-100">
+<html class="h-full">
   <head>
     <%= render 'shared/head' %>
   </head>
 
-  <body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0"> 
-      <div class="container mx-auto">
-        <%= render 'shared/navbar' %>
-      </div>
-      <%= render 'shared/notices' %>
-
-      <div class="container mt-8 mx-auto">
+  <body class="flex flex-col min-h-screen" style="font-family: 'Montserrat', sans-serif">
+    <div class="max-w-[430px] mx-auto w-full min-h-screen bg-white flex flex-col">
+      <main class="flex-1 pb-6 "> <!-- Added padding-bottom for footer -->
+        <%= render 'shared/notices' %>
         <%= yield %>
-      </div>
-    </main>
-
-    <%= render 'shared/footer' %>
+      </main>
+    </div>
   </body>
 </html>

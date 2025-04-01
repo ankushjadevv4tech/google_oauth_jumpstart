@@ -1,10 +1,43 @@
-<footer class="bg-light footer mt-auto py-3">
-  <div class="container d-flex justify-content-between mx-auto text-muted">
-    <span>&copy; <%= Date.today.year %> Your Company</span>
-    <ul class="d-inline float-end list-inline mb-0">
-      <li class="list-inline-item mr-3"><%= link_to "Terms", terms_path %></li>
-      <li class="list-inline-item mr-3"><%= link_to "Privacy", privacy_path %></li>
-    </ul>
+<nav class="max-w-[430px] mx-auto sm:flex md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 bg-body-tertiary" style="font-family: 'Montserrat', sans-serif;">
+  <div class="w-full mx-auto p-3 flex justify-around items-center">
+    <!-- Home Link -->  
+    <div class="text-center">
+      <%= link_to root_path, class: "text-gray-600 hover:text-blue-500 #{'text-blue-500' if current_page?(root_path)}" do %>
+        <div class="flex flex-col items-center">
+          <i class="bi bi-house-fill text-xl"></i>
+          <span class="text-xs mt-1">Home</span>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Copilot Link -->
+    <div class="text-center">
+      <%= link_to root_path, class: "text-gray-600 hover:text-blue-500 #{'text-blue-500' if current_page?(root_path)}" do %>
+        <div class="flex flex-col items-center">
+          <i class="bi bi-robot text-xl"></i>
+          <span class="text-xs mt-1">Copilot</span>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Browse Link -->
+    <div class="text-center">
+      <%= link_to root_path, class: "text-gray-600 hover:text-blue-500 #{'text-blue-500' if current_page?(root_path)}" do %>
+        <div class="flex flex-col items-center">
+          <i class="bi bi-grid-3x3-gap-fill text-xl"></i>
+          <span class="text-xs mt-1">Browse</span>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Profile Link -->
+    <div class="text-center">
+      <%= link_to edit_user_registration_path, class: "text-gray-600 hover:text-blue-500 #{'text-blue-500' if current_page?(edit_user_registration_path)}" do %>
+        <div class="flex flex-col items-center">
+          <i class="bi bi-person-fill text-xl"></i>
+          <span class="text-xs mt-1">Profile</span>
+        </div>
+      <% end %>
+    </div>
   </div>
-</footer>
-
+</nav>

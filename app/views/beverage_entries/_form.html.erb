@@ -1,75 +1,201 @@
-<div class="card mb-3 shadow mx-auto" style="max-width: 100%; background-color: lightgray;">
-  <div class="mt-3 mx-auto text-center">
-    <strong><%= title %></strong>
-  </div>
-  <div class="container-fluid mt-3 py-3">
-    <%= form_with model: beverage_entry, local: true, data: { controller: "beverage-form" } do |f| %>
-      
-      <!-- Consumed At -->
-      <div class="mb-3">
-        <label class="form-label">Date & Time of Consumption</label>
-        <%= f.datetime_local_field :consumed_at, class: "form-control", required: true %>
-      </div>
-
-      <!-- Category -->
-      <div class="mb-3">
-        <label class="form-label">Beverage Category</label>
-        <%= f.select :category, BeverageEntry::CATEGORIES.keys.map { |type| [type, type] }, 
-          { include_blank: true, selected: @beverage_entry&.category || (params[:action] == 'new' ? BeverageEntry::CATEGORIES.keys.first : nil) }, 
-          class: "form-select", 
-          data: { action: "change->beverage-form#updateSubcategories" }, 
-          required: true %>
-      </div>
-
-      <!-- Subcategory -->
-      <div class="mb-3">
-        <label class="form-label">Subcategory</label>
-        <%= f.select :subcategory, [], { include_blank: true }, class: "form-select", data: { beverage_form_target: "subcategory", selected_subcategory: f.object&.subcategory }, required: true %>
-      </div>
-
-      <!-- Quantity -->
-      <div class="mb-3">
-        <label class="form-label">Quantity</label>
-        <div class="d-flex">
-          <%= f.number_field :quantity, class: "form-control", required: true, min: 0 %>
-          <%= f.select :quantity_unit, [["Cups", "cups"], ["Ounces", "oz"], ["Milliliters", "ml"], ["Liters", "l"]], { selected: beverage_entry.quantity_unit }, class: "form-select ms-2", required: true %>
-        </div>
-      </div>
-
-      <!-- Temperature -->
-      <div class="mb-3">
-        <label class="form-label">Temperature</label>
-        <%= f.range_field :temperature, in: 0..6, class: "form-range", data: { action: "input->beverage-form#updateTemperatureLabel", beverage_form_target: "temperatureSlider" }, value: BeverageEntry.temperatures[beverage_entry.temperature] %>
-        <%= f.hidden_field :temperature, data: { beverage_form_target: "temperatureValue" }, value: beverage_entry.temperature %>
-        <div data-beverage-form-target="temperatureLabel" class="text-center">
-          <%= beverage_entry.temperature.present? ? "🌡️ #{BeverageEntry.temperatures.key(beverage_entry.temperature)}" : "🌡️ Room Temperature" %>
-        </div>
-        <div class="invalid-feedback">Please select a temperature.</div>
-      </div>
-
-      <!-- Additives -->
-      <div class="mb-3">
-        <label class="form-label">Additions</label>
-        <% ["Sugar", "Milk", "Creamer", "Lemon", "Lime", "Honey", "Artificial Sweeteners", "Protein Powder", "Electrolyte Powder"].each do |additive| %>
-          <div class="form-check">
-        <%= f.check_box :additions, { multiple: true, class: "form-check-input" }, additive, nil %>
-        <%= label_tag "beverage_entry_additions_#{additive}", additive, class: "form-check-label" %>
+<div class="max-w-[430px] mx-auto w-full" style="font-family: Montserrat, sans-serif">
+  <div class="relative flex flex-col">
+    <div class="absolute top-[-320px] bottom-0 h-[500px] w-full bg-[linear-gradient(180deg,rgba(255,0,75,0)_39.18%,rgba(255,0,75,0.97)_86.76%)] rounded-b-[50px]">
+      <div class="relative top-[380px] px-4 py-7.5">
+        <div class="flex items-center justify-center gap-4"> <!-Changed to flex row -->
+          <div class="rounded-full border border-white size-[53px] flex items-center justify-center">
+            <%= link_to root_path, class: "flex items-center justify-center bg-white rounded-full size-10 shadow-[0px_4px_10px_rgba(0,0,0,0.1)]" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#FE2968]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            <% end %>
           </div>
+          <h6 class="text-[22px] text-white font-semibold"><%= title %></h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative top-[150px] rounded-[40px] bg-white text-[#212121] shadow-[0px_5px_19px_0px_#6A6A6A29] w-full">
+      <div class="mt-4 mb-12 px-[29px]">
+        <%= form_with model: beverage_entry, local: true, data: { controller: "beverage-form" }, class: "space-y-6" do |f| %>
+          <!-Date & Time field -->
+          <div class="mb-6">
+            <label class="block text-[#212121] text-sm font-medium mb-2">Date & Time of Consumption</label>
+            <%= f.datetime_local_field :consumed_at, 
+                class: "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FE2968] focus:border-transparent",
+                required: true %>
+          </div>
+          
+          <!-Beverage Category -->
+          <div class="mb-6">
+            <label class="block text-[#212121] text-sm font-medium mb-2">Beverage Category</label>
+            <div class="relative w-full">
+              <%= f.select :category, BeverageEntry::CATEGORIES.keys.map { |type| [type, type] }, 
+                { include_blank: true, selected: @beverage_entry&.category || (params[:action] == 'new' ? BeverageEntry::CATEGORIES.keys.first : nil) },
+                class: "appearance-none w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FE2968] focus:border-transparent 
+                        max-w-full overflow-hidden text-ellipsis 
+                        [&_option]:bg-white [&_option]:text-black [&_option]:max-w-full [&_option]:overflow-hidden [&_option]:text-ellipsis",
+                data: { action: "change->beverage-form#updateSubcategories" },
+                required: true %>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg class="w-5 h-5 text-[#FE2968]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-Subcategory -->
+          <div class="mb-6">
+            <label class="block text-[#212121] text-sm font-medium mb-2">Subcategory</label>
+            <div class="relative w-full">
+              <%= f.select :subcategory, [], 
+                { include_blank: true }, 
+                class: "appearance-none w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FE2968] focus:border-transparent 
+                        max-w-full overflow-hidden text-ellipsis 
+                        [&_option]:bg-white [&_option]:text-black [&_option]:max-w-full [&_option]:overflow-hidden [&_option]:text-ellipsis",
+                data: { beverage_form_target: "subcategory", selected_subcategory: f.object&.subcategory },
+                required: true %>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg class="w-5 h-5 text-[#FE2968]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-Quantity -->
+          <div class="mb-6">
+            <label class="block text-[#212121] text-sm font-medium mb-2">Quantity</label>
+            <div class="flex gap-3">
+                <div class="flex-1">
+                  <%= f.number_field :quantity, 
+                      class: "w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FE2968] focus:border-transparent",
+                      required: true, min: 0 %>
+                </div>
+                <div class="flex-1 relative">
+                  <%= f.select :quantity_unit, [["ml", "ml"], ["oz", "oz"], ["cups", "cups"]], 
+                      { selected: beverage_entry.quantity_unit },
+                      class: "appearance-none w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FE2968] focus:border-transparent",
+                      required: true %>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                      <svg class="w-5 h-5 text-[#FE2968]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <!-Temperature section -->
+          <div class="mb-8">
+            <h3 class="text-[#212121] text-xl font-bold text-center mb-4">Temperature</h3>
+            <!-Temperature slider -->
+            <div class="relative mb-4">
+              <%= f.range_field :temperature, in: 0..6, 
+                class: "w-full h-2 bg-gradient-to-r from-[#FF005B] to-[#FF005B] rounded-full appearance-none 
+                  [&::-webkit-slider-thumb]:appearance-none 
+                  [&::-webkit-slider-thumb]:w-4 
+                  [&::-webkit-slider-thumb]:h-4 
+                  [&::-webkit-slider-thumb]:bg-blue-500 
+                  [&::-webkit-slider-thumb]:rounded-full 
+                  [&::-webkit-slider-thumb]:cursor-pointer
+                  [&::-moz-range-thumb]:appearance-none 
+                  [&::-moz-range-thumb]:w-4 
+                  [&::-moz-range-thumb]:h-4 
+                  [&::-moz-range-thumb]:bg-blue-500 
+                  [&::-moz-range-thumb]:rounded-full 
+                  [&::-moz-range-thumb]:cursor-pointer",
+                data: { action: "input->beverage-form#updateTemperatureLabel", beverage_form_target: "temperatureSlider" },
+                value: BeverageEntry.temperatures[beverage_entry.temperature] %>
+              <%= f.hidden_field :temperature, 
+                data: { beverage_form_target: "temperatureValue" }, 
+                value: beverage_entry.temperature %>
+            </div>
+            <!-Temperature indicator -->
+            <div class="flex justify-center">
+                <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[#FE2968]" data-beverage-form-target="temperatureLabel">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                  </svg>
+                  <span class="text-sm font-medium">
+                  <%= beverage_entry.temperature.present? ? BeverageEntry.temperatures.key(beverage_entry.temperature) : "Room Temperature (20°C / 68°F)" %>
+                  </span>
+                </div>
+            </div>
+          </div>
+          <!-Additions section -->
+          <div class="mb-8">
+            <h3 class="text-[#212121] text-xl font-bold text-center mb-4">Additions</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <% ["Sugar", "Milk", "Creamer", "Lemon", "Lime", "Honey", "Artificial Sweeteners", "Electrolyte Powder", "Protein Powder"].each do |additive| %>
+                <div class="flex items-center gap-2">
+                  <%= f.check_box :additions, 
+                      { multiple: true, 
+                        class: "hidden peer", 
+                        id: "beverage_entry_additions_#{additive.parameterize}" }, 
+                      additive, nil %>
+                  <label for="beverage_entry_additions_<%= additive.parameterize %>" class="size-5 rounded border border-gray-300 peer-checked:border-[#FE2968] peer-checked:bg-[#FE2968] flex items-center justify-center cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white hidden peer-checked:block" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                  </label>
+                  <label for="beverage_entry_additions_<%= additive.parameterize %>" class="text-sm cursor-pointer"><%= additive %></label>
+                </div>
+                <% end %>
+            </div>
+          </div>
+
+          <!--Current Image -->
+
+          <% if beverage_entry.photo.attached? %>
+            <div class="mb-8">
+              <label class="block text-[#212121] text-sm font-medium mb-2">Available Image</label>
+              <div class="relative max-w-xs mx-auto mb-4">
+                <%= image_tag beverage_entry.photo, class: "rounded-lg border border-gray-200 max-h-48 w-auto" %>
+              </div>
+            </div>
+          <% end %>
+
+          <!-Upload photo section -->
+          <div class="mb-8">
+            <label class="block text-[#212121] text-sm font-medium mb-2">Upload a photo (optional)</label>
+            
+            <div class="flex flex-col gap-4">
+              <!-File input button and name display -->
+              <div class="flex gap-2">
+                <label for="beverage_entry_photo" class="bg-[#FE2968] text-white text-sm font-medium px-4 py-2 rounded-lg cursor-pointer hover:bg-[#E51E5A] transition-colors">
+                  Choose file
+                </label>
+                <div class="flex-1 bg-[#FFD6E4] text-[#212121] text-sm px-4 py-2 rounded-lg overflow-hidden truncate">
+                  <%= f.file_field :photo, 
+                      class: "hidden", 
+                      id: "beverage_entry_photo",
+                      data: { action: "change->beverage-form#handleFileUpload" } %>
+                  <span id="file-name" data-beverage-form-target="fileName">No file chosen</span>
+                </div>
+              </div>
+              
+              <!-Image preview container (hidden by default) -->
+              <div data-beverage-form-target="previewContainer" class="hidden">
+                <div class="relative max-w-xs mx-auto">
+                  <img id="image-preview" class="rounded-lg border border-gray-200 max-h-48 w-auto" src="" alt="Preview">
+                  <button type="button" 
+                          data-action="click->beverage-form#removeImage"
+                          class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-Submit button -->
+          <%= f.submit submit_text, 
+          class: "w-full bg-[#FE2968] text-white text-lg font-semibold py-4 rounded-full shadow-[0px_4px_10px_rgba(254,41,104,0.3)] hover:bg-[#FE2968]/90 focus:outline-none focus:ring-2 focus:ring-[#FE2968] focus:ring-offset-2" %>
         <% end %>
       </div>
 
-      
-      <!-- Photo Upload -->
-      <div class="mb-3">
-        <label class="form-label">Upload a Photo (Optional)</label>
-        <%= f.file_field :photo, class: "form-control" %>
-      </div>
-
-      <!-- Submit -->
-      <div class="mt-3 text-center">
-        <%= f.submit submit_text, class: "btn btn-primary" %>
-      </div>
-
-    <% end %>
+    </div>
   </div>
 </div>

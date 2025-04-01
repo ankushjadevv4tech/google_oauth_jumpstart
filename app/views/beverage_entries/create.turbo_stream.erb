@@ -1,1 +1,1 @@
-<%= turbo_stream.append "beverage_entries", partial: "beverage_entries/beverage_entry", locals: { beverage_entry: @beverage_entry } %>
+<%= turbo_stream.prepend "beverage_entries", partial: "beverage_entries/beverage_entry", locals: { beverage_entry: @beverage_entry } %>

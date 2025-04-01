@@ -3,7 +3,7 @@ class BeverageEntriesController < ApplicationController
   before_action :set_beverage_entry, only: [:show, :edit, :update, :destroy]
 
   def index
-    @beverage_entries = current_user.beverage_entries.order(consumed_at: :desc)
+    @beverage_entries = current_user.beverage_entries.order(consumed_at: :desc).limit(20)
   end
 
   def new
@@ -33,7 +33,10 @@ class BeverageEntriesController < ApplicationController
 
   def update
     if @beverage_entry.update(beverage_entry_params)
-      redirect_to @beverage_entry, notice: 'Beverage entry was successfully updated.'
+      respond_to do |format|
+        format.turbo_stream { redirect_to @beverage_entry, notice: 'Beverage entry was successfully updated.' }
+      end
+      # redirect_to @beverage_entry, notice: 'Beverage entry was successfully updated.'
     else
       render :edit
     end
