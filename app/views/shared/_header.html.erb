@@ -1,0 +1,21 @@
+<div class="absolute top-[-320px] bottom-0 h-[559px] w-full bg-[linear-gradient(180deg,rgba(255,0,75,0)_39.18%,rgba(255,0,75,0.97)_86.76%)] rounded-b-[50px]">
+  <div class="relative top-[340px] px-4 py-7.5 flex flex-col gap-7">
+    <div class="border border-white rounded-[10px] py-[11px] text-center">
+      <h6 class="text-[22px] text-white font-semibold">Hydration Tracker</h6>
+    </div>
+    <div class="flex items-center justify-between gap-3 text-white">
+      <div class="size-[53px] rounded-full border border-white shadow-[0px_17px_23px_0px_#0A0A0A40,3px_4px_8px_0px_#FFFFFFB2]">
+        <img src="<%= image_path('profile.svg') %>" alt="Profile" class="size-full" />
+      </div>
+      <div class="flex-1 text-left">
+        <p class="text-xs">Good Afternoon </p>
+        <h5 class="text-xl font-bold">Hey <%= @current_user&.first_name %>! 👋</h5>
+      </div>
+      <div class="size-[53px] rounded-full border border-white shadow-[0px_17px_23px_0px_#0A0A0A40,3px_4px_8px_0px_#FFFFFFB2] bg-white text-black">
+        <%= link_to destroy_user_session_path, method: :delete, data: {turbo_confirm: 'Are you sure?'} do %>
+          <img src="<%= image_path('logout.png') %>" alt="Profile" class="size-[53px]" />
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
